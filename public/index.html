@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>慧居科技</title>
+    <script>
+      !function(a,b){function c(){var b=f.getBoundingClientRect().width;b/i>540&&(b=540*i);var c=b/10;f.style.fontSize=c+"px",k.rem=a.rem=c}var d,e=a.document,f=e.documentElement,g=e.querySelector('meta[name="viewport"]'),h=e.querySelector('meta[name="flexible"]'),i=0,j=0,k=b.flexible||(b.flexible={});if(g){console.warn("将根据已有的meta标签来设置缩放比例");var l=g.getAttribute("content").match(/initial\-scale=([\d\.]+)/);l&&(j=parseFloat(l[1]),i=parseInt(1/j))}else if(h){var m=h.getAttribute("content");if(m){var n=m.match(/initial\-dpr=([\d\.]+)/),o=m.match(/maximum\-dpr=([\d\.]+)/);n&&(i=parseFloat(n[1]),j=parseFloat((1/i).toFixed(2))),o&&(i=parseFloat(o[1]),j=parseFloat((1/i).toFixed(2)))}}if(!i&&!j){var p=(a.navigator.appVersion.match(/android/gi),a.navigator.appVersion.match(/iphone/gi)),q=a.devicePixelRatio;i=p?q>=3&&(!i||i>=3)?3:q>=2&&(!i||i>=2)?2:1:1,j=1/i}if(f.setAttribute("data-dpr",i),!g)if(g=e.createElement("meta"),g.setAttribute("name","viewport"),g.setAttribute("content","initial-scale="+j+", maximum-scale="+j+", minimum-scale="+j+", user-scalable=no"),f.firstElementChild)f.firstElementChild.appendChild(g);else{var r=e.createElement("div");r.appendChild(g),e.write(r.innerHTML)}a.addEventListener("resize",function(){clearTimeout(d),d=setTimeout(c,300)},!1),a.addEventListener("pageshow",function(a){a.persisted&&(clearTimeout(d),d=setTimeout(c,300))},!1),"complete"===e.readyState?e.body.style.fontSize=12*i+"px":e.addEventListener("DOMContentLoaded",function(){e.body.style.fontSize=12*i+"px"},!1),c(),k.dpr=a.dpr=i,k.refreshRem=c,k.rem2px=function(a){var b=parseFloat(a)*this.rem;return"string"==typeof a&&a.match(/rem$/)&&(b+="px"),b},k.px2rem=function(a){var b=parseFloat(a)/this.rem;return"string"==typeof a&&a.match(/px$/)&&(b+="rem"),b}}(window,window.lib||(window.lib={}));
+    </script>
+    <style>
+        
+        body,html{
+            height: 100%;
+            
+        }
+        body {
+            -webkit-overflow-scrolling: touch;
+        }
+      #app {
+        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
+        margin-top: 0px !important;;
+        height: 100%;
+        overflow: scroll;
+      }
+      iframe {
+	display: none;
+}
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+p,
+ul,
+ol,
+dl,
+dt,
+dd,
+fieldset,
+img,
+q,
+i,
+em,
+sub,
+sup,
+strong,
+form,
+input {
+	margin: 0;
+	padding: 0;
+	font-style: normal;
+	font-weight: normal;
+	border: 0 none;
+}
+ul,
+li,
+ol {
+  	list-style: none;
+}
+body {
+	width: 100%;
+	max-width: 768px;
+	font-size: 12px;
+	color: #333;
+	font-family: "Microsoft Yahei", "SimHei", Arial, Tahoma, sans-serif, serif;
+	-webkit-text-size-adjust: none;
+	margin: 0 auto;
+	/*min-width: 320px;*/
+	-webkit-appearance: none;
+	-webkit-tap-highlight-color:#fff;
+	overflow-x: hidden;
+	background:#fff;
+}
+html,body{
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+*{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+}
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+a {
+	text-decoration: none;
+	color: #333;
+	-webkit-tap-highlight-color: rgba(240,240,240,0);
+}
+a:active {
+  	text-decoration: none;
+}
+a:hover {
+  	text-decoration: none;
+}
+a:link,
+a:visited {
+  	text-decoration: none;
+}
+a:focus,
+input:focus,
+textarea:focus,
+  select {
+      outline: none;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+  }
+  input[type=button],
+  input[type=submit],
+  input[type=file],
+  button {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: rgba(240,240,240,0);
+  }
+  img {
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+  }
+  ::-webkit-input-placeholder {
+      color: #d8d8d8;
+  }
+  ::-moz-placeholder {
+      color: #d8d8d8;
+  }
+  :-moz-placeholder {
+      color: #d8d8d8;
+  }
+  /*layout*/
+  .cf:before,
+  .cf:after {
+    content: "";
+    display: table;
+  }
+  .cf:after {
+      clear: both;
+  }
+  .cf {
+      zoom: 1;
+  }
+  .fl {
+      float: left;
+  }
+  .fr {
+      float: right;
+  }
+  .clearfix:after {
+    content: '.';
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height:0;
+    font-size:0;
+  }
+  .clearfix{
+      *zoom:1;
+  }
+  .text-center {
+      text-align: center;
+  }
+  .text-left {
+      text-align: left;
+  }
+  .text-right {
+      text-align: right;
+  }
+  .hide {
+      display: none;
+  }
+  .show {
+    display: block;
+  }
+  .absolute {
+      position: absolute;
+  }
+  .relative {
+      position: relative;
+  }
+  .po-r {
+      position: relative;
+  }
+  .po-a {
+      position: absolute;
+  }
+  .po-f {
+      position: fixed;
+  }
+  i,
+  em {
+      font-style: normal;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+      font-weight: 500;
+  }
+    </style>
+  </head>
+  <body>
+    <div id="app" style="margin:0px"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
