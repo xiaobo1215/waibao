@@ -3,7 +3,7 @@
 npm install ...
 
 ## 本地开发和调试
-npm run dev
+npm run serve
 
 ## 发布
 npm run build
