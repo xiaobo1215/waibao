@@ -32,6 +32,7 @@
         v-model="show"
         :actions="mod"
         @select="onSelect"
+        
       />
     </div>
 
@@ -49,11 +50,15 @@
           v-model="temperatureLow"
           label="温度下线"
           placeholder="请输入两位小数"
+          ref="ref1"
+          @blur="bulrs"
         />
         <van-field
           v-model="temperatureHigh"
           label="温度上线"
           placeholder="请输入两位小数"
+          ref="ref2"
+          @blur="bulrs"
         />
       </van-dialog>
     </div>
@@ -67,11 +72,16 @@
           v-model="humidityLow"
           label="湿度下线"
           placeholder="请输入两位小数"
+          ref="ref3"
+          @blur="bulrs"
+          
         />
         <van-field
           v-model="humidityHigh"
           label="湿度上线"
           placeholder="请输入两位小数"
+           ref="ref4"
+           @blur="bulrs"
         />
       </van-dialog>
     </div>
@@ -132,6 +142,17 @@ export default {
     }
   },
   methods:{
+    bulrs(){
+      // 微信6.7.4bug
+      setTimeout(()=>{
+        if(document.activeElement.tagName=='INPUT' || document.activeElement.tagName=='input'){
+
+        }else {
+          window.scrollTo(0,0)
+        }
+      })
+      
+    },
     onInput(checked){
       Dialog.confirm({
         title: '提醒',
@@ -593,12 +614,16 @@ export default {
     this.deviceId=this.$route.params.id
     this.getData()
     this.loading=true
+    console.log(this.$refs,'------258----------')
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#app {
+  min-height: 100%;
+}
 .warn ul li {
   height: 1.333rem;
   line-height: 1.333rem;

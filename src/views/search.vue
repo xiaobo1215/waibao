@@ -163,11 +163,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-html,body {
-  height: 100%;
-  
-}
-
 .c1 {
   color: #0087ff;
 }

@@ -44,6 +44,7 @@
           v-model="editname"
           label="新名称："
           placeholder="请输入要修改的名称"
+          @blur="bulrs"
         />
       </van-dialog>
     </div>
@@ -75,6 +76,10 @@ export default {
    Dialog
   },
   methods:{
+    bulrs(){
+      // 微信6.7.4bug
+      window.scrollTo(0,0)
+    },
     deleteSb(){
       Dialog.confirm({
         title: '确定删除?',
