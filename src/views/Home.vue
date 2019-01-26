@@ -5,6 +5,10 @@
     </div>
     <div class="list_wrap">
       <item-list  v-on:select="onSelects" v-bind:list="items"></item-list>
+      <p class="hint" v-if="loadStatus==1" >加载中...</p>
+      <p class="hint" v-if="loadStatus==2" v-on:click="loadMore">点击加载更多</p>
+      <p class="hint" v-if="loadStatus==3">没有更多</p>
+      <p class="hint" v-if="loadStatus==4" v-on:click="reload">加载失败，点击重新加载</p>
     </div>
     <div>
       <van-actionsheet
@@ -41,6 +45,20 @@ export default {
   },
   methods:{
     onSelects(){
+      this.getList()
+    },
+    loadMore(){
+      if(this.loadStatus==1){
+        return
+      }
+      var _i=this.pageNum
+      _i++
+      this.pageNum=_i
+      this.loading=true
+      this.getList()
+    },
+    reload(){
+      this.loading=true
       this.getList()
     },
     onSelect(item){
@@ -82,10 +100,11 @@ export default {
     },
     getList(){
       let opendId=Cookies.get('openId')
-      get('/device/list',{openId:opendId}).then((res)=>{
+      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:4}).then((res)=>{
         if(res.code==10000){
           this.loading=false
-          this.items=res.data
+          this.items=this.items.concat(res.data.list) 
+          var current = Date.now()
           this.items.forEach((el,i)=>{
             el.probe_type=el.probe_type==1?'内置探头':'外置探头 '
             // el.time=formatDatePub(el.report_parse_acquisition_time)
@@ -101,12 +120,21 @@ export default {
             }else {
               el.powerL=4
             }
+            if((current-el.create_time)>(24*60*60*100)){
+              el.offline=true
+            }else {
+              el.offline=false
+            }
           })
+          console.log(this.items)
           this.items.sort((a,b)=>{
             if(b.top!=undefined && a.top!=undefined){
               return b.top-a.top
             }
           })
+          this.loadStatus=(res.data.hasNextPage)?2:3
+        }else {
+          this.loadStatus=4
         }
       }).catch((e)=>{
         console.log(e)
@@ -136,7 +164,9 @@ export default {
       isFirst:false,
       items:[],
       loading:false,
-      actions:[]
+      actions:[],
+      pageNum:1,
+      loadStatus:2 // 1加载中 2可以加载 3没有更多 4加载失败
     }
   },
   mounted(){
@@ -232,6 +262,16 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
+}
+
+.hint {
+  height: 1.067rem;
+  font-size: .427rem;
+  line-height: 1.067rem;
+  background: #f1f1f1;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  text-align: center;
 }
 
 

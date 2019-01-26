@@ -67,7 +67,7 @@ export function nyr(val){
      return t;
     }
   }
-  var time=year+'-'+month+'-'+day+'   '+hour+':'+minute+':'+second;
+  var time=year+'-'+month+'-'+day+'        '+hour+':'+minute+':'+second;
   return time
 }
 

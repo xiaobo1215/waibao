@@ -51,7 +51,7 @@
 
 <script>
 // @ is an alias to /src
-import {Loading,Actionsheet,Toast} from 'vant';
+import {Loading,Actionsheet,Toast,Dialog} from 'vant';
 import {get,post} from '../../src/util/http.js'
 require('../../src/util/cookie.js')
 
@@ -60,7 +60,8 @@ export default {
   components: {
     Loading,
     Actionsheet,
-    Toast
+    Toast,
+    Dialog
   },
   data(){
     return {
@@ -109,7 +110,14 @@ export default {
     },
 
     delete(){
-      get('/device/memberDelete',{member_wxUserDeviceId :this.editData.member_wxUserDeviceId,openId:this.openId}).then((res)=>{
+
+      Dialog.confirm({
+        title: '确定删除?',
+        message: '删除后将不在展示该成员'
+      }).then(() => {
+        this.loading=true
+        // on confirm
+        get('/device/memberDelete',{member_wxUserDeviceId :this.editData.member_wxUserDeviceId,openId:this.openId}).then((res)=>{
         if(res.code==10000){
          Toast('删除成功')
           var id=this.editData.member_wxUserDeviceId
@@ -131,6 +139,11 @@ export default {
           Toast('删除失败')
           console.log(e)
       })
+      }).catch(() => {
+        // on cancel
+        this.loading=false
+        Toast('谢手下留情...')
+      });
     },
     move(item){
       get('/device/adminTransfer',{deviceId :this.editData.member_deviceId,fromOpenId:this.openId,toOpenId:this.editData.member_openId}).then((res)=>{

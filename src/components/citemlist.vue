@@ -23,7 +23,9 @@
             <span class="fr fontFamily hht-dengdai" v-if="item.cmdExeStatus==1" style="font-size:.32rem; margin-right: .2rem;"></span>
             <span class="fr fontFamily hht-dengdai" v-if="item.cmdExeStatus==4" style="font-size:.32rem  margin-right: .2rem;;"></span>
             <span class="fr fontFamily hht-shibai" v-if="item.cmdExeStatus==3" style="font-size:.32rem; margin-right: .2rem;"></span>
-            <span class="fr fontFamily hht-chenggong-01" v-if="item.cmdExeStatus==2" style="font-size:.32rem; margin-right: .2rem;"></span>
+            <!-- <span class="fr fontFamily hht-chenggong-01" v-if="item.cmdExeStatus==2" style="font-size:.32rem; margin-right: .2rem;"></span> -->
+            <!-- 离线el.offline=true -->
+            <span class="fr fontFamily hht-lixian"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;"></span>
           </p>
           <!-- <p class="p">
             <span>数据设置下发状态:</span>
@@ -33,18 +35,18 @@
             <span class="fr fontFamily hht-shibai" v-if="item.cmdExeStatus==3" style="font-size:.4rem; margin-right: .2rem;"></span>
             <span class="fr fontFamily hht-chenggong-01" v-if="item.cmdExeStatus==2" style="font-size:.4rem; margin-right: .2rem;"></span>
           </p> -->
-          <p class="wendu p">
+          <p class="wendu p" v-on:click="gotoWdPage(item)">
             <span class="fontFamily hht-wendu">温度：</span>
             <span v-bind:class='returnClass(item.report_parse_temperature,item.temperature_low,item.temperature_high)'>{{item.report_parse_temperature }}℃</span>
             <span class="scope fr " v-if="item.isSeted==1">范围：<span class="">{{item.temperature_low}}-{{item.temperature_high}}</span></span>
           </p>
-          <p class="shidu p ">
+          <p class="shidu p " v-on:click="gotoWdPage(item)">
             <span class="fontFamily hht-shidu">湿度：</span>
             <span v-bind:class='returnClass(item.report_parse_humidity,item.humidity_low,item.humidity_high)'>{{item.report_parse_humidity}} %RH</span>
             <span class="scope fr" v-if="item.isSeted==1">范围：<span class="">{{item.humidity_low}}-{{item.humidity_high}}</span></span>
           </p>
           <p class="info p">
-            <span>{{item.report_parse_acquisition_time | nyr }}</span>
+            <span >{{item.report_parse_acquisition_time | nyr }}</span>
             <span>ID:{{item.device_id}}</span>
             <span>{{item.sensor_type}}</span>
           </p>
@@ -156,6 +158,13 @@ export default {
         this.selectId=''
         this.$router.push(opt)
       }
+    },
+    gotoWdPage (opt){
+      console.log(opt)
+      let data={
+        path:'/wsd/'+opt.device_id
+      }
+      this.$router.push(data)
     },
     set(index,top,id,role){
       let data=[]

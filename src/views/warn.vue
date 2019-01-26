@@ -32,7 +32,6 @@
         v-model="show"
         :actions="mod"
         @select="onSelect"
-        
       />
     </div>
 
