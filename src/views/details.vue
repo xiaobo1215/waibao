@@ -39,7 +39,29 @@
         <span>删除设备：</span>
         <span class="fr fontFamily hht-shanchu"></span>
       </li>
+      <li class="li" v-on:click="showMark">
+        <span>修正按钮</span>
+      </li>
     </ul>
+    <transition name="fade">
+        <div class="qc" v-if="markStatus" v-on:click="hideMark"></div>
+    </transition>
+     <div class="xz_wrap" v-show="markStatus">
+        <div class="wd clearfix">
+          <span class="text">温度修正：</span>
+          <input type="text">
+          <span class="jg">--</span>
+          <input type="text">
+        </div>
+        <div class="sd clearfix">
+          <span class="text">湿度修正：</span>
+          <input type="text">
+          <span class="jg">--</span>
+          <input type="text">
+        </div>
+      </div>
+    
+
     <!-- 弹出修改框 -->
     <div class="dialog">
       <van-dialog
@@ -76,6 +98,7 @@
         v-model="showMod"
         :actions="mod"
         @select="onSelect"
+        @blur="bulrs"
       />
     </div>
   </div>
@@ -161,6 +184,13 @@ export default {
         // on cancel
         Toast('谢手下留情...')
       });
+    },
+    showMark (){
+      console.log('------------')
+      this.markStatus=true
+    },
+    hideMark(){
+      this.markStatus=false
     },
     edit(){
       this.show=true
@@ -331,7 +361,8 @@ export default {
       info:{},
       loading:false,
       showMod:false,
-      mod:[]
+      mod:[],
+      markStatus:false
     }
   },
   mounted(){
@@ -383,6 +414,7 @@ export default {
   top:0px;
   background: #333;
   opacity: .8;
+  z-index: 10;
 }
 
 .img_wrap {
@@ -417,6 +449,54 @@ export default {
 
 .po_re {
   position: relative;
+}
+
+.xz_wrap {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 85%;
+  background: #fff;
+  transition: .3;
+  border-radius: 4px;
+  font-size: 16px;
+  overflow: hidden;
+  transition: .3s;
+  z-index: 2000;
+  padding: 10px;
+}
+
+.xz_wrap .wd,.xz_wrap .sd {
+  /* height: 40px; */
+  padding: 5px 0px;
+}
+
+.xz_wrap span {
+  font-size: 14px;
+  float: left;
+  line-height: 30px;
+  line-height: 30px;
+}
+.xz_wrap input {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  resize: none;
+  width: 60px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  float: left;
+  line-height: 30px;
+  line-height: 30px;
+  padding: 0 6px;
+}
+
+.xz_wrap .text {
+  margin: 0 .2rem 0 1rem;
+}
+.xz_wrap .jg {
+  margin: 0 4px;
 }
 
 </style>

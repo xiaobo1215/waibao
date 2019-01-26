@@ -20,6 +20,7 @@
     <div class="load" v-if="loading">
       <van-loading color="#c1c1c1" size="40px"/>
     </div>
+    
   </div>
 </template>
 
