@@ -46,7 +46,8 @@
     <transition name="fade">
         <div class="qc" v-if="markStatus" v-on:click="hideMark"></div>
     </transition>
-     <div class="xz_wrap" v-show="markStatus">
+    <transition name="fade">
+     <div class="xz_wrap"  v-if="markStatus">
         <div class="wd clearfix">
           <span class="text">温度修正：</span>
           <input type="text">
@@ -59,7 +60,12 @@
           <span class="jg">--</span>
           <input type="text">
         </div>
+        <div class="btn_wrap clearfix">
+          <div class="btn">取消</div>
+          <div class="btn gl ">确认</div>
+        </div>
       </div>
+      </transition>
     
 
     <!-- 弹出修改框 -->
@@ -497,6 +503,38 @@ export default {
 }
 .xz_wrap .jg {
   margin: 0 4px;
+}
+
+.btn_wrap .btn {
+  float: left;
+  width: 50%;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+}
+
+.btn_wrap .btn::before{
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  border: inherit;
+  border-color: #000;
+  background-color: #000;
+  border-radius: inherit;
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+
+.gl {
+  color: #00c000;
+}
+
+.btn_wrap .btn:active::before {
+  opacity: .3;
 }
 
 </style>
