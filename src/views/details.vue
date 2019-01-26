@@ -316,7 +316,6 @@ export default {
         deviceId:this.info.device_id
       }).then((res)=>{
         this.info.name=this.editname
-        this.editname=""
         cb()
       }).catch(function(e){
         console.log(e,'------------')

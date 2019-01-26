@@ -100,7 +100,7 @@ export default {
     },
     getList(){
       let opendId=Cookies.get('openId')
-      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:4}).then((res)=>{
+      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:1}).then((res)=>{
         if(res.code==10000){
           this.loading=false
           this.items=this.items.concat(res.data.list) 
