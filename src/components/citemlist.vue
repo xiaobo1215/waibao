@@ -26,6 +26,9 @@
             <!-- <span class="fr fontFamily hht-chenggong-01" v-if="item.cmdExeStatus==2" style="font-size:.32rem; margin-right: .2rem;"></span> -->
             <!-- 离线el.offline=true -->
             <span class="fr fontFamily hht-lixian"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;"></span>
+            <!-- 设备是否校准过 -->
+            <span class="fr fontFamily hht-jiaozhun"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;"></span>
+          
           </p>
           <!-- <p class="p">
             <span>数据设置下发状态:</span>

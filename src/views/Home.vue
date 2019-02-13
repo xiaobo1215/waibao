@@ -101,7 +101,7 @@ export default {
     },
     getList(){
       let opendId=Cookies.get('openId')
-      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:1}).then((res)=>{
+      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:2}).then((res)=>{
         if(res.code==10000){
           this.loading=false
           this.items=this.items.concat(res.data.list) 
@@ -171,7 +171,6 @@ export default {
     }
   },
   mounted(){
-    console.log('------还是会触发我么？？？？？')
     this.loading=true
 
     //oJ3fKwNf3IkVFiAGKVu2WE-0i918

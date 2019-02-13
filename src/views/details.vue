@@ -34,40 +34,27 @@
         <span>设备类型：</span>
         <span class="fr">{{info.report_parse_version_high}}</span>
       </li>
-      
       <li class="li" v-on:click="deleteSb">
         <span>删除设备：</span>
         <span class="fr fontFamily hht-shanchu"></span>
       </li>
+      <li class="li">
+        <span>传输数据字节数：</span>
+        <span class="fr">{{info.report_type_total}}</span>
+      </li>
+      <li class="li">
+        <span>传输数据条数：</span>
+        <span class="fr">{{info.report_total}}</span>
+      </li>
+      <li class="li">
+        <span>计数重置日期：</span>
+        <span class="fr">{{info.report_count_reset_time | nyr}}</span>
+      </li>
       <li class="li" v-on:click="showMark">
-        <span>修正按钮</span>
+        <span class="btn">修正按钮</span>
       </li>
     </ul>
-    <transition name="fade">
-        <div class="qc" v-if="markStatus" v-on:click="hideMark"></div>
-    </transition>
-    <transition name="fade">
-     <div class="xz_wrap"  v-if="markStatus">
-        <div class="wd clearfix">
-          <span class="text">温度修正：</span>
-          <input type="text">
-          <span class="jg">--</span>
-          <input type="text">
-        </div>
-        <div class="sd clearfix">
-          <span class="text">湿度修正：</span>
-          <input type="text">
-          <span class="jg">--</span>
-          <input type="text">
-        </div>
-        <div class="btn_wrap clearfix">
-          <div class="btn">取消</div>
-          <div class="btn gl ">确认</div>
-        </div>
-      </div>
-      </transition>
     
-
     <!-- 弹出修改框 -->
     <div class="dialog">
       <van-dialog
@@ -107,21 +94,62 @@
         @blur="bulrs"
       />
     </div>
+    <div class="dialog_sd">
+      <van-dialog
+        v-model="markStatus"
+        show-cancel-button
+        :before-close="SDbeforeClose"
+      >
+        <van-field
+          v-model="tOffset"
+          label="温度修正"
+          placeholder="请输入两位小数"
+          @blur="bulrs"
+          
+        />
+        <van-field
+          v-model="hOffset"
+          label="湿度修正"
+          placeholder="请输入两位小数"
+          @blur="bulrs"
+        />
+      </van-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import { Dialog ,Loading ,Toast,Actionsheet} from 'vant'
+import { Dialog ,Loading ,Toast,Actionsheet,Button} from 'vant'
 import {get,post} from '../../src/util/http.js'
 
 export default {
   name: 'xq',
   components: {
    Dialog,
-   Actionsheet
+   Actionsheet,
+   Button
   },
   filters:{
+    nyr (val){
+      if(!val) return
+      var d=new Date(val);
+      var year=d.getFullYear();
+      var month=change(d.getMonth()+1);
+      var day=change(d.getDate());
+      var hour=change(d.getHours());
+      var minute=change(d.getMinutes());
+      var second=change(d.getSeconds());
+      function change(t){
+        if(t<10){
+          return "0"+t;
+        }else{
+          return t;
+        }
+      }
+      var time=year+'-'+month+'-'+day+'        '+hour+':'+minute+':'+second;
+      return time
+    },
     formattingType(val){
       if(typeof val !='number') return val
       switch(val)
@@ -192,7 +220,6 @@ export default {
       });
     },
     showMark (){
-      console.log('------------')
       this.markStatus=true
     },
     hideMark(){
@@ -200,6 +227,101 @@ export default {
     },
     edit(){
       this.show=true
+    },
+    cancel(){
+      this.hideMark()
+    },
+    enter(){
+
+    },
+    SDbeforeClose(action, done){
+      if(action=='confirm'){
+        // setTimeout(done, 1000);
+        this.checkoutSD(done)
+      }else{
+        done()
+      }
+    },
+    checkoutSD(cb){
+      let callback=cb|| function(){}
+      if(this.tOffset===''){
+        Toast('湿度修正不能为空')
+        callback(false)
+        return
+      }
+
+      if(this.hOffset===''){
+        Toast('湿度修正不能为空')
+        callback(false)
+        return
+      }
+      // 保留两位小数 不做四舍五入 
+      this.tOffset=this.toFixedTow(this.tOffset)
+      this.hOffset=this.toFixedTow(this.hOffset)
+
+      // 换成number
+      this.tOffset=parseFloat(this.tOffset)
+      this.hOffset=parseFloat(this.hOffset)
+
+      if(this.tOffset<-30){
+        Toast('温度校准下线不能小于-30.00')
+        callback(false)
+        return
+      }
+      if(this.tOffset>30){
+        Toast('温度校准上线不能大于30.00')
+        callback(false)
+        return
+      }
+      if(this.hOffset<-30){
+        Toast('湿度校准下线不能小于-30.00')
+        callback(false)
+        return
+      }
+      if(this.hOffset>30){
+        Toast('湿度校准上线不能大于30.00')
+        callback(false)
+        return
+      }
+      if(this.hOffset==this.info.humidity_offset && this.tOffset==this.info.temperature_offset){
+        Toast('于当前校准值相同，不能修改。')
+        callback(false)
+        return
+      }
+      this.loading=true
+      this.submitOffset(callback)
+
+    },
+    submitOffset(cb){
+      let callback=cb || function(){}
+      let param={
+          temperatureOffset :this.tOffset,
+          humidityOffset :this.hOffset,
+          reportCountReset:1,
+          deviceId :this.info.device_id,
+        }
+      console.log(param)
+      post('/device/update',param).then((res)=>{
+        if(res.code==10000){
+          callback && callback()
+          Toast('修改成功！')
+          this.loading=false
+          this.info.humidity_offset=this.hOffset
+          this.info.temperature_offset=this.tOffset
+        }else {
+          Toast('修改失败，稍后再试！')
+          this.loading=false
+        }
+      }).catch((res)=>{
+        this.loading=false
+        Toast('修改失败，稍后再试！')
+      })
+
+    },
+    toFixedTow(val){
+      let reg = /([0-9]+.[0-9]{2})[0-9]*/;
+      val=(val+'').replace(reg,"$1")
+      return val
     },
     // 采集编辑
     cjEdit(){
@@ -327,10 +449,11 @@ export default {
       get('/device/view',{wxUserDeviceId:this.deviceId}).then((res)=>{
         if(res.code==10000){
           this.info=res.data
-          this.editname=  this.info.name
-          console.log(this.currentname,'--------------this.currentname----------')
+          this.editname=this.info.name
+          this.tOffset=this.info.temperature_offset
+          console.log(this.info.temperature_offset,'-------this.info.temperature_offset')
+          this.hOffset=this.info.humidity_offset
         }
-      
       }).catch((e)=>{
         console.log(e)
       })
@@ -368,7 +491,9 @@ export default {
       loading:false,
       showMod:false,
       mod:[],
-      markStatus:false
+      markStatus:false,
+      tOffset:'', // 温度偏移量
+      hOffset:'' // 湿度偏移量
     }
   },
   mounted(){
@@ -537,4 +662,23 @@ export default {
   opacity: .3;
 }
 
+.li {
+  position: relative;
+}
+
+.btn {
+  background:#00c000;
+  display: block;
+  width: 200px;
+  height: 1rem;
+  width: 2.666667rem;
+  color: #fff;
+  text-align: center;
+  line-height: 1rem;
+  border-radius: 16px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0,-50%);
+}
 </style>

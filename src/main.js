@@ -22,8 +22,8 @@ router.beforeEach((to,from,next)=>{
     document.title=to.meta.title
   }
   // 本地开发 写入cookie   开发人员的openId
-  var key='oJ3fKwNf3IkVFiAGKVu2WE-0i918'
-  Cookies('openId',key,{ expires: new Date(new Date().getTime() + (2*24*60*60 * 1000))})
+  // var key='oJ3fKwNf3IkVFiAGKVu2WE-0i918'
+  // Cookies('openId',key,{ expires: new Date(new Date().getTime() + (2*24*60*60 * 1000))})
   let href= encodeURIComponent(window.location.href) 
   if(Cookies.get('openId')){
     next()
