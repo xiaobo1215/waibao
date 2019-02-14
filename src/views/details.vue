@@ -675,7 +675,7 @@ export default {
   color: #fff;
   text-align: center;
   line-height: 1rem;
-  border-radius: 16px;
+  border-radius: 30px;
   position: absolute;
   left: 0;
   top: 50%;

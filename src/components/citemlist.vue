@@ -25,9 +25,11 @@
             <span class="fr fontFamily hht-shibai" v-if="item.cmdExeStatus==3" style="font-size:.32rem; margin-right: .2rem;"></span>
             <!-- <span class="fr fontFamily hht-chenggong-01" v-if="item.cmdExeStatus==2" style="font-size:.32rem; margin-right: .2rem;"></span> -->
             <!-- 离线el.offline=true -->
-            <span class="fr fontFamily hht-lixian"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;"></span>
+            <!-- <span class="fr fontFamily hht-lixian"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;"></span> -->
+            <span class="fr font_icon"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;">离线</span>
             <!-- 设备是否校准过 -->
-            <span class="fr fontFamily hht-jiaozhun"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;"></span>
+            <span class="fr font_icon"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;">已校准</span>
+            <!-- <span class="fr fontFamily hht-jiaozhun"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;"></span> -->
           
           </p>
           <!-- <p class="p">
@@ -322,6 +324,17 @@ export default {
 
 .machine_name .fontFamily {
   margin-right: 0.2rem;
+}
+.font_icon {
+  background: #0087ff;
+  color: #fff;
+  font-size: 10px !important;
+  padding: 0 6px;
+  line-height: 16px;
+  border-radius: 8px;
+  margin-top: .24rem;
+  height: 16px;
+  text-align: center;
 }
 </style>
 

@@ -146,23 +146,33 @@ export default {
       });
     },
     move(item){
-      get('/device/adminTransfer',{deviceId :this.editData.member_deviceId,fromOpenId:this.openId,toOpenId:this.editData.member_openId}).then((res)=>{
-        if(res.code==10000){
-          this.loading=false
-          Toast('转移成功')
-          this.loading=false
-          this.pageNum=1;
-          this.getData()
-          this.items=[]
-        }else {
+      Dialog.confirm({
+        title: '确定转移?',
+        message: '转移后您将不在有部分权限'
+      }).then(()=>{
+         this.loading=true;
+         get('/device/adminTransfer',{deviceId :this.editData.member_deviceId,fromOpenId:this.openId,toOpenId:this.editData.member_openId}).then((res)=>{
+          if(res.code==10000){
+            this.loading=false
+            Toast('转移成功')
+            this.loading=false
+            this.pageNum=1;
+            this.getData()
+            this.items=[]
+          }else {
+            Toast('转移失败')
+            this.loading=false
+          }
+        }).catch((e)=>{
           Toast('转移失败')
           this.loading=false
-        }
-      }).catch((e)=>{
-        Toast('转移失败')
+          console.log(e)
+        })
+      }).catch(() => {
+        // on cancel
         this.loading=false
-        console.log(e)
-      })
+        Toast('谢手下留情...')
+      });      
     },
 
     allow(){
