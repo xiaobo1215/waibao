@@ -51,7 +51,7 @@
         <span class="fr">{{info.report_count_reset_time | nyr}}</span>
       </li>
       <li class="li" v-on:click="showMark">
-        <span class="btn">修正按钮</span>
+        <span class="btn">温湿度校准</span>
       </li>
     </ul>
     
@@ -255,6 +255,18 @@ export default {
         callback(false)
         return
       }
+
+      if(!this.isNumber(this.tOffset)){
+        Toast('请输入正确的温度校准值')
+        callback(false)
+        return
+      }
+      if(!this.isNumber(this.hOffset)){
+        Toast('请输入正确的湿度校准值')
+        callback(false)
+        return
+      }
+
       // 保留两位小数 不做四舍五入 
       this.tOffset=this.toFixedTow(this.tOffset)
       this.hOffset=this.toFixedTow(this.hOffset)
@@ -316,7 +328,15 @@ export default {
         this.loading=false
         Toast('修改失败，稍后再试！')
       })
-
+    },
+    isNumber(val){
+      let regPos = /^\d+(\.\d+)?$/; //非负浮点数
+      let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+      if(regPos.test(val) || regNeg.test(val)){
+        return true;
+      }else{
+        return false;
+      }
     },
     toFixedTow(val){
       let reg = /([0-9]+.[0-9]{2})[0-9]*/;
@@ -451,7 +471,6 @@ export default {
           this.info=res.data
           this.editname=this.info.name
           this.tOffset=this.info.temperature_offset
-          console.log(this.info.temperature_offset,'-------this.info.temperature_offset')
           this.hOffset=this.info.humidity_offset
         }
       }).catch((e)=>{

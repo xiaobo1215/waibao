@@ -3,13 +3,30 @@
     <div class="search_wrapa" v-on:click="toSearch">
       <p class=""><span class="fontFamily hht-sousuo"></span> 请输入搜索关键词</p>
     </div>
-    <div class="list_wrap">
-      <item-list  v-on:select="onSelects" v-bind:list="items"></item-list>
-      <p class="hint" v-if="loadStatus==1" >加载中...</p>
+    <mt-loadmore :top-method="loadTop"  :topDistance='45' @top-status-change="handleTopChange" ref="loadmore" class="list_wrap">
+      <div slot="top" class="mint-loadmore-top">
+        <span v-show="topStatus === 'drop'" class="load_hint">释放更新数据</span>
+        <span v-show="topStatus === 'loading'" class="load_hint">加载中..</span>
+        <span v-show="topStatus === 'pull'" class="load_hint">下拉更新数据</span>
+      </div>
+      
+      <div v-infinite-scroll="loadMore"
+          infinite-scroll-disabled='falg'
+          infinite-scroll-distance="20">
+          <item-list  v-on:select="onSelects" v-bind:list="items"></item-list>
+          <p class="hint" v-if="loadStatus==3">没有更多</p>
+      </div>
+      <!-- <div slot="bottom" class="mint-loadmore-bottom">
+        <span class="load_hint">加载更多数据...</span>
+      </div> -->
+      <!-- <p class="hint" v-if="loadStatus==1" >加载中...</p>
       <p class="hint" v-if="loadStatus==2" v-on:click="loadMore">点击加载更多</p>
       <p class="hint" v-if="loadStatus==3">没有更多</p>
-      <p class="hint" v-if="loadStatus==4" v-on:click="reload">加载失败，点击重新加载</p>
-    </div>
+      <p class="hint" v-if="loadStatus==4" v-on:click="reload">加载失败，点击重新加载</p> -->
+    </mt-loadmore>
+    <!-- <div class="list_wrap">
+      
+    </div> -->
     <div>
       <van-actionsheet
         v-model="show"
@@ -20,35 +37,164 @@
     <div class="load" v-if="loading">
       <van-loading color="#c1c1c1" size="40px"/>
     </div>
-    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import { Actionsheet ,Loading,Toast ,Dialog } from 'vant'
+import { Loadmore,InfiniteScroll  } from 'mint-ui';
 import ItemList  from '../components/citemlist'
 import {get,post} from '../../src/util/http.js'
-import {formatDatePub,nyr} from '../../src/util/util.js'
+import {nyr} from '../../src/util/util.js'
 require('../../src/util/cookie.js')
 
 export default {
   name: 'home',
+  data(){
+      return {
+        selectId:'',//当前选择的设备id
+        show:false,
+        isFirst:false,
+        items:[],
+        loading:false,
+        actions:[],
+        pageNum:1,
+        loadStatus:2, // 1加载中 2可以加载 3没有更多 4加载失败
+        pageSize:5,
+        allLoaded:false,
+        falg:true,
+        topStatus: '',
+      }
+  },
   components: {
     Loading,
     Actionsheet ,
     Toast,
     Dialog,
-    ItemList
+    ItemList,
+    Loadmore
   },
   filters:{
     nyr
   },
   methods:{
+    handleTopChange(status) {
+      console.log(status,'-----------status')
+      this.topStatus = status;
+    },
+    loadTop() {
+      // 加载更多数据
+      
+      this.update()
+    },
+    loadBottom() {
+      this.allLoaded = true;// 若数据已全部获取完毕
+      this.$refs.loadmore.onBottomLoaded();
+    },
+
+    update(){
+      console.log('-------------123')
+      if(this.loadStatus==1){
+        return
+      }
+      this.loadStatus=1 // 1加载中 2可以加载 3没有更多 4加载失败
+      this.pageSize=5
+      this.pageNum=1
+      this.loading=true
+      let opendId=Cookies.get('openId')
+      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:this.pageSize}).then((res)=>{
+        if(res.code==10000){
+          this.loading=false
+          this.items=[].concat(res.data.list) 
+          var current = Date.now()
+          this.items.forEach((el,i)=>{
+            el.probe_type=el.probe_type==1?'内置探头':'外置探头 '
+            // el.time=formatDatePub(el.report_parse_acquisition_time)
+            if(el.report_parse_voltage>3.6){
+              // 高
+              el.powerL=1
+            }else if(el.report_parse_voltage<3.6 && el.report_parse_voltage>3.5 ){
+              // 中
+              el.powerL=2
+            }else if(el.report_parse_voltage<3.5 && el.report_parse_voltage>3.45){
+              // 低
+              el.powerL=3
+            }else {
+              el.powerL=4
+            }
+            if((current-(el.report_parse_acquisition_time)*1000)>(24*60*60*100)){
+              el.offline=true
+            }else {
+              el.offline=false
+            }
+          })
+          console.log(this.items)
+          this.items.sort((a,b)=>{
+            if(b.top!=undefined && a.top!=undefined){
+              return b.top-a.top
+            }
+          })
+          this.loadStatus=(res.data.hasNextPage)?2:3
+          this.$refs.loadmore.onTopLoaded();
+          if(this.loadStatus==3){
+            this.falg=true
+          }else {
+            this.falg=false
+          }
+        }else {
+          this.loadStatus=4
+        }
+      }).catch((e)=>{
+        console.log(e)
+      })
+    },
     onSelects(){
-      this.getList()
+      // this.getList()
+      let pageSize = this.pageSize
+      let pageNum = this.pageNum
+      let opendId=Cookies.get('openId')
+      get('/device/list',{openId:opendId,pageNum:1,pageSize:(pageSize*pageNum)}).then((res)=>{
+        if(res.code==10000){
+          this.loading=false
+          this.items=[].concat(res.data.list) 
+          var current = Date.now()
+          this.items.forEach((el,i)=>{
+            el.probe_type=el.probe_type==1?'内置探头':'外置探头 '
+            // el.time=formatDatePub(el.report_parse_acquisition_time)
+            if(el.report_parse_voltage>3.6){
+              // 高
+              el.powerL=1
+            }else if(el.report_parse_voltage<3.6 && el.report_parse_voltage>3.5 ){
+              // 中
+              el.powerL=2
+            }else if(el.report_parse_voltage<3.5 && el.report_parse_voltage>3.45){
+              // 低
+              el.powerL=3
+            }else {
+              el.powerL=4
+            }
+            if((current-el.create_time)>(24*60*60*100)){
+              el.offline=true
+            }else {
+              el.offline=false
+            }
+          })
+          this.items.sort((a,b)=>{
+            if(b.top!=undefined && a.top!=undefined){
+              return b.top-a.top
+            }
+          })
+          this.loadStatus=(res.data.hasNextPage)?2:3
+        }else {
+          this.loadStatus=4
+        }
+      }).catch((e)=>{
+        console.log(e)
+      })
     },
     loadMore(){
+      console.log('-------------123')
       if(this.loadStatus==1){
         return
       }
@@ -56,6 +202,7 @@ export default {
       _i++
       this.pageNum=_i
       this.loading=true
+      this.falg=true
       this.getList()
     },
     reload(){
@@ -101,7 +248,8 @@ export default {
     },
     getList(){
       let opendId=Cookies.get('openId')
-      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:2}).then((res)=>{
+      this.loadStatus=1
+      get('/device/list',{openId:opendId,pageNum:this.pageNum,pageSize:this.pageSize}).then((res)=>{
         if(res.code==10000){
           this.loading=false
           this.items=this.items.concat(res.data.list) 
@@ -127,13 +275,18 @@ export default {
               el.offline=false
             }
           })
-          console.log(this.items)
+    
           this.items.sort((a,b)=>{
             if(b.top!=undefined && a.top!=undefined){
               return b.top-a.top
             }
           })
           this.loadStatus=(res.data.hasNextPage)?2:3
+          if(this.loadStatus==3){
+            this.falg=true
+          }else {
+            this.falg=false
+          }
         }else {
           this.loadStatus=4
         }
@@ -158,18 +311,7 @@ export default {
       }
     }
   },
-  data(){
-    return {
-      selectId:'',//当前选择的设备id
-      show:false,
-      isFirst:false,
-      items:[],
-      loading:false,
-      actions:[],
-      pageNum:1,
-      loadStatus:2 // 1加载中 2可以加载 3没有更多 4加载失败
-    }
-  },
+  
   mounted(){
     this.loading=true
 
@@ -265,6 +407,8 @@ export default {
 }
 
 .hint {
+  width: 95%;
+  margin: 0 auto;
   height: 1.067rem;
   font-size: .427rem;
   line-height: 1.067rem;
@@ -272,6 +416,23 @@ export default {
   border-radius: 5px;
   margin-bottom: 5px;
   text-align: center;
+}
+
+.search_wrapa {
+  z-index: 50;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+}
+.list_wrap {
+  padding-top: .6rem;
+}
+
+.load_hint {
+  display: block;
+  text-align: center;
+  height: .6rem;
+  line-height: .6rem;
 }
 
 

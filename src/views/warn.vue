@@ -308,7 +308,6 @@ export default {
         return
       }
 
-
       let _this=this
       let cbb=function(){
         _this.info.temperature_low=_this.temperatureLow
@@ -388,7 +387,7 @@ export default {
         return
       }
 
-       console.log(this.humidityHigh,'-----',this.info.humidity_high,'校验合格',this.humidityLow,'----',this.info.humidity_low)
+      console.log(this.humidityHigh,'-----',this.info.humidity_high,'校验合格',this.humidityLow,'----',this.info.humidity_low)
 
       if(this.humidityHigh==this.info.humidity_high && this.humidityLow==this.info.humidity_low){
         Toast('与当前值一致,不能提交...')
@@ -471,9 +470,9 @@ export default {
       let regPos = /^\d+(\.\d+)?$/; //非负浮点数
       let regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
       if(regPos.test(val) || regNeg.test(val)){
-          return true;
+        return true;
       }else{
-          return false;
+        return false;
       }
     },
     getData(){

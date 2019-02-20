@@ -10,11 +10,7 @@ import Wsd from './views/wsd.vue'
 import Search from './views/search.vue'
 import Download from './views/download.vue'
 
-
 Vue.use(Router)
-
-
-
 export default new Router({
   // mode: 'history',
   routes: [

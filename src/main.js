@@ -9,12 +9,14 @@ import './assets/icon/iconfont.css';
 import {get,post} from '../src/util/http'
 require('../src/util/cookie')
 
-import ElementUI from 'element-ui';
+// import ElementUI from 'element-ui';
+import Mint from 'mint-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
+// Vue.use(ElementUI);
 
 
 Vue.use(Vant);
+Vue.use(Mint);
 Vue.prototype.$echarts=echarts
 Vue.config.productionTip = false
 router.beforeEach((to,from,next)=>{

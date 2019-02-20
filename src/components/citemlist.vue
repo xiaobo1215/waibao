@@ -27,6 +27,7 @@
             <!-- 离线el.offline=true -->
             <!-- <span class="fr fontFamily hht-lixian"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;"></span> -->
             <span class="fr font_icon"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;">离线</span>
+            <span class="fr font_icon"   v-if="item.offline==false"   style="font-size:.4rem; margin-right: .2rem;">在线</span>
             <!-- 设备是否校准过 -->
             <span class="fr font_icon"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;">已校准</span>
             <!-- <span class="fr fontFamily hht-jiaozhun"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;"></span> -->
@@ -326,8 +327,6 @@ export default {
   margin-right: 0.2rem;
 }
 .font_icon {
-  background: #0087ff;
-  color: #fff;
   font-size: 10px !important;
   padding: 0 6px;
   line-height: 16px;
@@ -335,6 +334,7 @@ export default {
   margin-top: .24rem;
   height: 16px;
   text-align: center;
+  border: 1px solid #333;
 }
 </style>
 
