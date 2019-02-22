@@ -84,8 +84,6 @@ export default {
       this.topStatus = status;
     },
     loadTop() {
-      // 加载更多数据
-      
       this.update()
     },
     loadBottom() {
