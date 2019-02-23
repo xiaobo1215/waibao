@@ -10,14 +10,14 @@
         <span>报警间隔 </span>
         <span class="fr" v-on:click="alarmEdit">{{ info.alarm_interval | formattingType}} <span class="fontFamily hht-xiugai-copy aling"></span></span>
       </li>
-      <li>
+      <!-- <li>
         <span>采集间隔 </span>
         <span class="fr" v-on:click="cjEdit">{{ info.sampling_interval | formattingType}} <span class="fontFamily hht-xiugai-copy aling"></span></span>
       </li>
       <li>
         <span>上报间隔 </span>
         <span class="fr" v-on:click="updateEedit">{{ info.upload_interval | formattingType}} <span class="fontFamily hht-xiugai-copy aling"></span></span>
-      </li>
+      </li>-->
       <li class="setmod">
         <span>正常温度范围℃</span>
         <span class="fr " v-on:click="modificationWenDu"><span>{{info.temperature_low}}℃ </span> ~ <span >{{info.temperature_high}}℃<span  class="fontFamily hht-xiugai-copy aling"></span> </span>  </span>

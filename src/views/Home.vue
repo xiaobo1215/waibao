@@ -5,7 +5,7 @@
     </div>
     <mt-loadmore :top-method="loadTop"  :topDistance='45' @top-status-change="handleTopChange" ref="loadmore" class="list_wrap">
       <div slot="top" class="mint-loadmore-top">
-        <span v-show="topStatus === 'drop'" class="load_hint">释放更新数据</span>
+        <span v-show="topStatus === 'drop'" class="load_hint">可以松开了...</span>
         <span v-show="topStatus === 'loading'" class="load_hint">加载中..</span>
         <span v-show="topStatus === 'pull'" class="load_hint">下拉更新数据</span>
       </div>

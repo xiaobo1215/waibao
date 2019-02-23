@@ -24,13 +24,11 @@
             <span class="fr fontFamily hht-dengdai" v-if="item.cmdExeStatus==4" style="font-size:.32rem  margin-right: .2rem;;"></span>
             <span class="fr fontFamily hht-shibai" v-if="item.cmdExeStatus==3" style="font-size:.32rem; margin-right: .2rem;"></span>
             <!-- <span class="fr fontFamily hht-chenggong-01" v-if="item.cmdExeStatus==2" style="font-size:.32rem; margin-right: .2rem;"></span> -->
-            <!-- 离线el.offline=true -->
-            <!-- <span class="fr fontFamily hht-lixian"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;"></span> -->
-            <span class="fr font_icon"   v-if="item.offline==true"   style="font-size:.4rem; margin-right: .2rem;">离线</span>
-            <span class="fr font_icon"   v-if="item.offline==false"   style="font-size:.4rem; margin-right: .2rem;">在线</span>
+            
             <!-- 设备是否校准过 -->
-            <span class="fr font_icon"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;">已校准</span>
-            <!-- <span class="fr fontFamily hht-jiaozhun"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;"></span> -->
+            <span class="fr font_icon"   v-if="item.isOffset==1"   style="font-size:.4rem; margin-right: .2rem;">校准</span>
+            <!-- 离线el.offline=true -->
+            <span class="fr lixian"   v-if="!item.isOnline"   style="font-size:.4rem; margin-right: .2rem;">离线</span>
           
           </p>
           <!-- <p class="p">
@@ -41,18 +39,19 @@
             <span class="fr fontFamily hht-shibai" v-if="item.cmdExeStatus==3" style="font-size:.4rem; margin-right: .2rem;"></span>
             <span class="fr fontFamily hht-chenggong-01" v-if="item.cmdExeStatus==2" style="font-size:.4rem; margin-right: .2rem;"></span>
           </p> -->
-          <p class="wendu p" v-on:click="gotoWdPage(item)">
-            <span class="fontFamily hht-wendu">温度：</span>
-            <span v-bind:class='returnClass(item.report_parse_temperature,item.temperature_low,item.temperature_high)'>{{item.report_parse_temperature }}℃</span>
+          <p class="wendu p" >
+
+            <span class="fontFamily hht-wendu" v-on:click="gotoWdPage(item)">温度：</span>
+            <span v-bind:class='returnClass(item.report_parse_temperature,item.temperature_low,item.temperature_high)' v-on:click="gotoWdPage(item)">{{item.report_parse_temperature }}℃</span>
             <span class="scope fr " v-if="item.isSeted==1">范围：<span class="">{{item.temperature_low}}-{{item.temperature_high}}</span></span>
           </p>
-          <p class="shidu p " v-on:click="gotoWdPage(item)">
-            <span class="fontFamily hht-shidu">湿度：</span>
-            <span v-bind:class='returnClass(item.report_parse_humidity,item.humidity_low,item.humidity_high)'>{{item.report_parse_humidity}} %RH</span>
+          <p class="shidu p " >
+            <span class="fontFamily hht-shidu" v-on:click="gotoWdPage(item)">湿度：</span>
+            <span v-bind:class='returnClass(item.report_parse_humidity,item.humidity_low,item.humidity_high)' v-on:click="gotoWdPage(item)">{{item.report_parse_humidity}} %RH</span>
             <span class="scope fr" v-if="item.isSeted==1">范围：<span class="">{{item.humidity_low}}-{{item.humidity_high}}</span></span>
           </p>
           <p class="info p">
-            <span >{{item.report_parse_acquisition_time | nyr }}</span>
+            <span >{{item.report_parse_acquisition_time | NYR }} <span style="margin:0 3px"></span>  {{item.report_parse_acquisition_time | SFM }}</span>
             <span>ID:{{item.device_id}}</span>
             <span>{{item.sensor_type}}</span>
           </p>
@@ -72,7 +71,7 @@
 
 <script>
 import {get,post} from '../../src/util/http.js'
-import {formatDatePub,nyr} from '../../src/util/util.js'
+import {formatDatePub,nyr,NYR,SFM} from '../../src/util/util.js'
 import { Actionsheet ,Loading,Toast ,Dialog } from 'vant'
 
 export default {
@@ -92,7 +91,7 @@ export default {
     Dialog
   },
   filters:{
-    nyr
+    nyr,NYR,SFM
   },
   data(){
     return {
@@ -328,14 +327,31 @@ export default {
 }
 .font_icon {
   font-size: 10px !important;
-  padding: 0 6px;
-  line-height: 16px;
-  border-radius: 8px;
-  margin-top: .24rem;
-  height: 16px;
+  padding: 0 .133333rem;
+  border-radius: .186667rem;
+  margin-top: .26rem;
   text-align: center;
-  border: 1px solid #333;
+  color: #999;
+  border:1px solid #999;
+  height: .426667rem;
+  line-height:  .426667rem;
+  transform: scale(.9)
 }
+
+.lixian {
+  font-size: 10px !important;
+  padding: 0 .133333rem;
+  border-radius: .186667rem;
+  margin-top: .26rem;
+  text-align: center;
+  color: #fff;
+  height: .426667rem;
+  line-height:  .426667rem;
+  background: #0087ff;
+  transform: scale(.9)
+}
+
+
 </style>
 
 

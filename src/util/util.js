@@ -71,6 +71,48 @@ export function nyr(val){
   return time
 }
 
+export function NYR(val){
+  if(!val) return
+  val=val*1000
+  var d=new Date(val);
+  var year=d.getFullYear();
+  var month=change(d.getMonth()+1);
+  var day=change(d.getDate());
+  var hour=change(d.getHours());
+  var minute=change(d.getMinutes());
+  var second=change(d.getSeconds());
+  function change(t){
+    if(t<10){
+     return "0"+t;
+    }else{
+     return t;
+    }
+  }
+  var time = year+'-'+month+'-'+day
+  return time
+}
+
+export function SFM(val){
+  if(!val) return
+  val=val*1000
+  var d=new Date(val);
+  var year=d.getFullYear();
+  var month=change(d.getMonth()+1);
+  var day=change(d.getDate());
+  var hour=change(d.getHours());
+  var minute=change(d.getMinutes());
+  var second=change(d.getSeconds());
+  function change(t){
+    if(t<10){
+     return "0"+t;
+    }else{
+     return t;
+    }
+  }
+  var time = hour+':'+minute+':'+second
+  return time
+}
+
 /* 年月日  时分秒 */
 
 export function Dnyr(val){
