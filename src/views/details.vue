@@ -185,6 +185,22 @@ export default {
         case 86400:
         return '24个小时'
         break;
+
+        default:
+        var hours = parseInt((val % (60 * 60 * 24)) / (60 * 60));
+        var minutes = parseInt((val % ( 60 * 60)) / (60));
+        var seconds = (val % (60));
+        var time = ''
+        if(hours>0){
+          time=hours+'小时 '
+        }
+        if(minutes>0){
+          time+=(minutes+'分钟 ')
+        }
+        if(seconds){
+          time+=(seconds+'秒')
+        }
+        return  time
       }
     }
   },
