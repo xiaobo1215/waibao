@@ -26,6 +26,10 @@
         <span>正常湿度范围</span>
         <span class="fr " v-on:click="modificationSD"><span>{{info.humidity_low}}%RH</span> ~ <span >{{info.humidity_high}}%RH<span  class="fontFamily hht-xiugai-copy aling"></span> </span>  </span>
       </li>
+      <li class="btn_wrap">
+        <span class="default_btn" v-on:click="setDefault1">恢复正常温度范围</span>
+        <span class="default_btn" v-on:click="setDefault2">恢复正常湿度范围</span>
+      </li>
     </ul>
     <div>
       <van-actionsheet
@@ -239,6 +243,7 @@ export default {
 
     // 校验温度 范围是否合法
     checkoutWD(cb){
+
       let callback=cb|| function(){}
       
       if(this.temperatureLow===''){
@@ -582,6 +587,26 @@ export default {
       ]
       this.mod=data
       this.show = true;
+    },
+
+    // 温度 湿度 设置成默认值
+    setDefault1(){
+      this.temperatureHigh=655.35
+      this.temperatureLow=-655.36
+      this.submitParam(()=>{
+        this.info.temperature_low=this.temperatureLow
+        this.info.temperature_high=this.temperatureHigh
+      })
+
+    },
+
+    setDefault2(){
+      this.humidityHigh=100
+      this.humidityLow=0
+      this.submitParam(()=>{
+        this.info.humidity_low=this.humidityLow
+        this.info.humidity_high=this.humidityHigh
+      })
     }
   },
   data(){
@@ -606,6 +631,8 @@ export default {
       sdDialogShow:false,// 湿度编辑弹窗显示
       mod:[] ,// 底部弹出框的内容
     }
+
+   
   },
   mounted(){
     console.log(this.$route.params,'-----------params')
@@ -668,6 +695,34 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
+}
+
+.default_btn {
+    background: #00c000;
+    height: 1rem;
+    line-height: 1rem;
+    padding: 0 .133333rem;
+    width: 2.666667rem;
+    color: #fff;
+    text-align: center;
+    border-radius: .533333rem;
+    position: absolute;
+    
+}
+
+.default_btn:first-child{
+  left: 0;
+  top: 50%;
+  transform: translate(0,-50%)
+}
+
+.default_btn:last-child{
+  right: 0;
+  top: 50%;
+  transform: translate(0,-50%)
+}
+.btn_wrap {
+  position: relative;
 }
 
 </style>
